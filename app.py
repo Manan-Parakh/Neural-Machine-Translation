@@ -48,15 +48,16 @@ max_decoder_seq_length = 59
 def decode_sequence(input_text):
     input_seq = np.zeros((1, max_encoder_seq_length, len(input_token_index)), dtype="float32")
 
-    # Convert input text into numerical sequence
+    # Convert input text into one-hot encoded format
     for t, char in enumerate(input_text):
         if char in input_token_index:
             input_seq[0, t, input_token_index[char]] = 1.0
+    input_seq[0, t + 1 :, input_token_index[" "]] = 1.0  # Padding with spaces
 
-    # Encode the input text
+    # Encode input sentence
     states_value = encoder_model.predict(input_seq)
 
-    # Initialize target sequence with start token "\t"
+    # Start decoding with "<START>" token
     target_seq = np.zeros((1, 1, len(target_token_index)))
     target_seq[0, 0, target_token_index["\t"]] = 1.0
 
@@ -66,17 +67,17 @@ def decode_sequence(input_text):
     while not stop_condition:
         output_tokens, h, c = decoder_model.predict([target_seq] + states_value)
 
-        # Get the most likely character
+        # Get the most probable character
         sampled_token_index = np.argmax(output_tokens[0, -1, :])
         sampled_char = reverse_target_char_index.get(sampled_token_index, "")
 
         decoded_sentence += sampled_char
 
-        # Stop if end token "\n" is found
+        # Stop at "<END>" token
         if sampled_char == "\n" or len(decoded_sentence) > max_decoder_seq_length:
             stop_condition = True
 
-        # Update target sequence with the predicted character
+        # Update the target sequence with the predicted character
         target_seq = np.zeros((1, 1, len(target_token_index)))
         target_seq[0, 0, sampled_token_index] = 1.0
 
@@ -84,7 +85,6 @@ def decode_sequence(input_text):
         states_value = [h, c]
 
     return decoded_sentence.strip()
-
 
 # Streamlit UI
 st.title("English to French Translator 🇬🇧➡️🇫🇷")
