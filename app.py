@@ -6,7 +6,7 @@ from tensorflow import keras
 # Load the trained model
 @st.cache_resource()
 def load_models():
-    model = keras.models.load_model("fren_to_eng.keras")
+    model = keras.models.load_model("eng_to_fra.keras")
 
     # Restore encoder
     encoder_inputs = model.input[0]
@@ -37,7 +37,7 @@ def load_models():
 
 encoder_model, decoder_model = load_models()
 
-# Load token index mappings
+# Load token mappings
 input_token_index = np.load("input_token_index.npy", allow_pickle=True).item()
 target_token_index = np.load("target_token_index.npy", allow_pickle=True).item()
 reverse_target_char_index = {i: char for char, i in target_token_index.items()}
@@ -74,12 +74,5 @@ def decode_sequence(input_text):
     return decoded_sentence.strip()
 
 # Streamlit UI
-st.title("French to English Translator 🌍")
-input_text = st.text_input("Enter a French sentence:", "")
-
-if st.button("Translate"):
-    if input_text:
-        translation = decode_sequence(input_text)
-        st.success(f"Translated: {translation}")
-    else:
-        st.warning("Please enter a sentence.")
+st.title("English to French Translator 🇬🇧➡️🇫🇷")
+input_text =
