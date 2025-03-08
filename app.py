@@ -3,10 +3,10 @@ import numpy as np
 import tensorflow as tf
 from tensorflow import keras
 
-# Load the trained model
+# Load trained French-to-English model
 @st.cache_resource()
 def load_models():
-    model = keras.models.load_model("eng_to_fra.keras")
+    model = keras.models.load_model("fren_to_eng.keras")
 
     # Restore encoder
     encoder_inputs = model.input[0]
@@ -40,11 +40,15 @@ encoder_model, decoder_model = load_models()
 # Load token mappings
 input_token_index = np.load("input_token_index.npy", allow_pickle=True).item()
 target_token_index = np.load("target_token_index.npy", allow_pickle=True).item()
+
+# Reverse mappings for English-to-French
+reverse_input_char_index = {i: char for char, i in input_token_index.items()}
 reverse_target_char_index = {i: char for char, i in target_token_index.items()}
 
-# Translation function
+# Translation function (For English-to-French)
 def decode_sequence(input_text):
     input_seq = np.zeros((1, 14, len(input_token_index)), dtype="float32")
+    
     for t, char in enumerate(input_text):
         if char in input_token_index:
             input_seq[0, t, input_token_index[char]] = 1.0
@@ -61,7 +65,8 @@ def decode_sequence(input_text):
         output_tokens, h, c = decoder_model.predict([target_seq] + states_value)
 
         sampled_token_index = np.argmax(output_tokens[0, -1, :])
-        sampled_char = reverse_target_char_index[sampled_token_index]
+        sampled_char = reverse_target_char_index.get(sampled_token_index, "")
+
         decoded_sentence += sampled_char
 
         if sampled_char == "\n" or len(decoded_sentence) > 59:
