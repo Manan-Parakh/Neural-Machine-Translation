@@ -43,6 +43,7 @@ target_token_index = np.load("target_token_index.npy", allow_pickle=True).item()
 reverse_target_char_index = {i: char for char, i in target_token_index.items()}
 
 max_encoder_seq_length = 14
+max_decoder_seq_length = 59
 # Translation function
 def decode_sequence(input_text):
     input_seq = np.zeros((1, max_encoder_seq_length, len(input_token_index)), dtype="float32")
