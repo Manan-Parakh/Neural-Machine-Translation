@@ -3,7 +3,7 @@ import numpy as np
 import tensorflow as tf
 from tensorflow import keras
 
-# Load trained English-to-French model
+# Load the trained English-to-French model
 @st.cache_resource()
 def load_models():
     model = keras.models.load_model("fren_to_eng.keras")
@@ -77,11 +77,13 @@ def decode_sequence(input_text):
 
 # Streamlit UI
 st.title("English to French Translator 🇬🇧➡️🇫🇷")
+st.write("Translate English sentences to French using a trained neural machine translation model.")
+
 input_text = st.text_input("Enter an English sentence:", "")
 
 if st.button("Translate"):
     if input_text:
         translation = decode_sequence(input_text)
-        st.success(f"Translated: {translation}")
+        st.success(f"**French Translation:** {translation}")
     else:
         st.warning("Please enter a sentence.")
