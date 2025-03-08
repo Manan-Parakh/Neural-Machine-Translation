@@ -75,4 +75,11 @@ def decode_sequence(input_text):
 
 # Streamlit UI
 st.title("English to French Translator 🇬🇧➡️🇫🇷")
-input_text =
+input_text = st.text_input("Enter an English sentence:", "")
+
+if st.button("Translate"):
+    if input_text:
+        translation = decode_sequence(input_text)
+        st.success(f"Translated: {translation}")
+    else:
+        st.warning("Please enter a sentence.")
