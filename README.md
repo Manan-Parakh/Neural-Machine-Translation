@@ -2,7 +2,7 @@
 
 ## Overview
 This project develops a high-precision English-French translation model using a Seq2Seq Encoder-Decoder architecture with an Attention mechanism. The model is designed to enhance language translation accuracy significantly.
-## Deployed Model (Malfunctions sometimes; credit goes to ChatGPT!)
+## Deployed Model (Malfunctioning; credit goes to ChatGPT! 😢😢)
 Link: https://neural-machine-translation-mananparakh.streamlit.app/
 ## Features
 - Seq2Seq model with Attention for improved translation quality
